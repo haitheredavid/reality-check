@@ -2,18 +2,19 @@
   "name": "notion",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/index.js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "try": "node ./src/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "David Morgan",
   "license": "ISC",
   "dependencies": {
     "@notionhq/client": "^1.0.4",
+    "dotenv": "^16.0.1",
     "jshint": "^2.13.4"
-  },
-  "devDependencies": {
-    "typescript": "^4.7.4"
   }
 }
