@@ -1,9 +1,10 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-// console.log(process.env)
-
 const { Client } = require("@notionhq/client");
+const { NotionToMarkdown } = require("notion-to-md");
+const fs = require("fs");
+const { log } = require("console");
 
 console.log("trying to get client");
 const notion = new Client({ auth: process.env.NOTION_KEY });
@@ -57,6 +58,7 @@ async function getAssignments() {
         ],
       },
     });
+    console.log(results);
     pages.push(...results);
     if (!next_cursor) {
       break;
@@ -95,5 +97,33 @@ async function addItem(text, databaseId) {
   console.log("Success! Entry added.");
 }
 
-getAssignments();
+async function getPage(pageId) {
+  console.log("Getting Page");
+  console.log(pageId);
+  const page = await notion.pages.retrieve({ page_id: pageId });
+  console.log("page received")
+  console.log(page);
+}
+async function getMarkDown(pageId) {
+  console.log("Getting Page as Markdown");
+
+  const n2m = new NotionToMarkdown({ notionClient: notion });
+  const mdblocks = await n2m.pageToMarkdown(pageId);
+  console.log("markdown received")
+  console.log(mdblocks);
+  const mdString = n2m.toMarkdownString(mdblocks);
+  console.log(mdString);
+
+  fs.writeFile("test.md", mdString, (err) => {
+    console.log(err);
+  });
+
+  // console.log(pageId)
+  // const response = await notion.pages.retrieve({ page_id: pageId })
+  // console.log(response)
+}
+getPage("557f12b3953e467894092082f66f7410");
+
+// getMarkDown("557f12b3953e467894092082f66f7410");
+// getAssignments();
 // addItem("Some place in a space!", process.env.NOTION_DATABASE_ID)
